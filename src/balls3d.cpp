@@ -129,4 +129,18 @@ void Balls3D::poresToCSV() {
     }
 }
 
+void Balls3D::operator()(Domain3D & domain) {
+    
+    generateBalls(domain);
+    ballsToCSV();
+    sortBallsRadius();
+    generateBallGroups();
+    populateSiblings();
+    generatePores();
+    generatePoreConnections();
+    generatePoreConnections();
+    adjacencyToTXT();
+
+}
+
 

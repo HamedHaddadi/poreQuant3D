@@ -20,6 +20,7 @@ class Balls3D:public Balls {
     public:
         Balls3D() = default;
         void generateBalls(Domain3D &);
+        void operator()(Domain3D &);
         virtual void ballsToCSV();
         virtual void poresToCSV();
         virtual void generatePores();

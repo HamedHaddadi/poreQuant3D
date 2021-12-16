@@ -207,3 +207,15 @@ void Balls::adjacencyToTXT() {
         }
     }
 }
+
+void Balls::operator()(Domain2D & domain) {
+    generateBalls(domain);
+    ballsToCSV();
+    sortBallsRadius();
+    generateBallGroups();
+    populateSiblings();
+    generatePores();
+    generatePoreConnections();
+    generatePoreConnections();
+    adjacencyToTXT();
+}

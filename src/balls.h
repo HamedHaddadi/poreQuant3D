@@ -34,6 +34,7 @@ class Balls {
         void generatePoreAdjacency();
         void generatePoreConnections();
         void adjacencyToTXT();
+        void operator()(Domain2D &);
         virtual void ballsToCSV();
         virtual void poresToCSV();
         virtual void generatePores();

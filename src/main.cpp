@@ -1,12 +1,13 @@
 
 # include "utilities.h"
+# include "domain2d.h"
+# include "balls.h"
 # include <iostream>
 # include <string>
 # include <vector>
 # include <cstdlib>
 # include <stdexcept>
 
-void driver(std::string file_name, std::string output_dir);
 
 int main (int argc, char * argv[]) {
 
@@ -33,7 +34,9 @@ int main (int argc, char * argv[]) {
     utilities::listdir(image_files, image_dir);
     
     for (std::vector< std::string >::iterator file_it = image_files.begin(); file_it != image_files.end(); ++file_it) {
-        driver(*file_it, output_dir);
+        Balls balls;
+        Domain2D domain(*file_it, output_dir);
+        balls(domain);
     }
 
     return 0;
