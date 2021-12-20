@@ -1,5 +1,5 @@
-# ifndef MAXBALL_H_
-# define MAXBALL_H_
+# if !defined(MAXBALL_H)
+# define MAXBALL_H
 # include "header.h"
 
 class MaxBall {
@@ -50,7 +50,8 @@ class MaxBall {
         friend constexpr bool operator==(const MaxBall &, const MaxBall &);
         friend constexpr bool operator>=(const MaxBall &, const MaxBall &);
         friend constexpr bool operator<(const MaxBall &, const MaxBall &);
-
+        // overloaded output operators
+        friend std::ofstream& operator<<(std::ofstream& ,const MaxBall&);
 };
 
 # endif

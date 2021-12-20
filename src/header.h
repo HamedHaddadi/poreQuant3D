@@ -19,8 +19,10 @@
 # include <cmath>
 # include <memory>
 # include "utilities.h"
+# include "types.h"
 
 static std::map<std::string , int> node_type = {{"solid", 0}, {"solid-boundary", 1},
  {"void-boundary", 2}, {"void", 3}};
+
 
 # endif

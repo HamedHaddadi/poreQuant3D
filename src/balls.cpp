@@ -12,7 +12,7 @@ void Balls::generateBalls(Domain2D & domain) {
     dy = domain.dy_;
     output_dir_ = domain.output_dir_;
     counter_ = domain.counter_;
-    const int range_max = (row > col) ? row: col;
+    int range_max = (row >= col) ? row: col;
 
     for (int cx = 0; cx < row; cx++)
         for (int cy = 0; cy < col; cy++)
@@ -20,8 +20,8 @@ void Balls::generateBalls(Domain2D & domain) {
             loop_flag = true;
             if ((domain.nodeType(cx, cy) == 0) || (domain.nodeType(cx, cy) == 1)) continue;
             for (int radius = 1; radius < range_max && loop_flag; radius++) {
-                for (int x = utilities::minRes(cx - radius, row); x <= utilities::maxRes(cx + radius, row) &&loop_flag; x++)
-                    for (int y = utilities::minRes(cy - radius, col); y <= utilities::maxRes(cy + radius, col) && loop_flag; y++)
+                for (int x = utilities::minRes(cx - radius, 0); x <= utilities::maxRes(cx + radius, row) &&loop_flag; x++)
+                    for (int y = utilities::minRes(cy - radius, 0); y <= utilities::maxRes(cy + radius, col) &&loop_flag; y++)
                     if (utilities::Radius<int>(x - cx, y -cy) <= radius) {
                         node_type = domain.nodeType(x, y);
                         if ((node_type == 0) || (node_type == 1))
@@ -90,7 +90,7 @@ void Balls::populateSiblings() {
 void Balls::generatePores() {
     int pore_count{0};
     std::set<int> connections;
-    std::vector<std::tuple<double, double, double> > pore_family;
+    std::vector<types::Tuple3D> pore_family;
     std::tuple<double, double> parent_coordinates, child_coordinates;
     double radius;
 
@@ -106,11 +106,15 @@ void Balls::generatePores() {
             pore_family.clear();
             parent_coordinates = balls_it_ -> getCoordinates();
             radius = balls_it_ -> getRadius();
-            pore_family.emplace_back(std::get<0>(parent_coordinates), std::get<1>(parent_coordinates), radius);
+            pore_family.emplace_back(std::make_tuple(std::get<0>(parent_coordinates),
+                 std::get<1>(parent_coordinates),
+                     radius));
             
             for (auto & child:balls_it_ -> getChildren()) {
                 child_coordinates = max_balls_.at(child).getCoordinates();
-                pore_family.emplace_back(std::get<0>(child_coordinates), std::get<1>(child_coordinates), max_balls_.at(child).getRadius());
+                pore_family.emplace_back(std::make_tuple(std::get<0>(child_coordinates),
+                     std::get<1>(child_coordinates),
+                      max_balls_.at(child).getRadius()));
             }
             pores_.emplace_back(parent_coordinates, pore_count, radius, connections, pore_family);
             ++pore_count;
@@ -156,12 +160,10 @@ void Balls::ballsToCSV() {
         std::cout <<"could not open the file in ballstocsv"<<std::endl;
 
     balls_out <<"x,y,radius,rank"<< std::endl;
-    double x,y;
-    for (balls_it_ = max_balls_.begin(); balls_it_ != max_balls_.end(); balls_it_++) {
-        x = std::get<0>(balls_it_ -> getCoordinates());
-        y = std::get<1>(balls_it_ -> getCoordinates());
-        balls_out<<x<<","<<y<<","<<balls_it_ -> getRadius()<<","<<balls_it_ -> getRank()<<std::endl;
+    for (auto const & ball:max_balls_) {
+        balls_out<<ball<<std::endl;
     }
+
 }
 
 void Balls::poresToCSV() {
@@ -176,20 +178,17 @@ void Balls::poresToCSV() {
     }
 
     pores_out <<"id,x,y,radius"<<std::endl;
-    for (pores_it_ = pores_.begin(); pores_it_ != pores_.end(); ++pores_it_) {
-        pores_out<<pores_it_ -> getID()<<","<<std::get<0>(pores_it_ -> getCoordinates())<<","<<std::get<1>(pores_it_ -> getCoordinates())<<","<<pores_it_ -> getRadius()<<std::endl;
-        // output pore families
+    for (auto const & pore:pores_) {
+        pores_out<<pore<<std::endl;
         std::string family_filename = family_dirname + "/family_of_pore_" + std::to_string(pores_it_ -> getID()) + ".csv";
         std::ofstream family_out(family_filename);
         if (!family_out.is_open()) {
             std::cout <<"could not open file for family output"<<std::endl;
-        }
-        for (auto & member:pores_it_ -> getPoreFamily()) 
-            family_out<<std::get<0>(member)<<","<<std::get<1>(member)<<","<<std::get<2>(member)<<std::endl;
-        
+        }        
+        for (auto const & member:pore.getPoreFamily())
+            family_out<<member<<std::endl;
     }
 }
-
 
 void Balls::adjacencyToTXT() {
     std::string out_filename = output_dir_ + "/connections_" + std::to_string(counter_) + ".txt";
@@ -216,6 +215,7 @@ void Balls::operator()(Domain2D & domain) {
     populateSiblings();
     generatePores();
     generatePoreConnections();
-    generatePoreConnections();
+    generatePoreAdjacency();
+    poresToCSV();
     adjacencyToTXT();
 }

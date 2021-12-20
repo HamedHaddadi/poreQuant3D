@@ -23,7 +23,8 @@ class MaxBall3D: public MaxBall {
         friend constexpr bool operator!=(const MaxBall3D &, const MaxBall3D &);
         friend constexpr bool operator==(const MaxBall3D &, const MaxBall3D &);
         friend constexpr bool operator>=(const MaxBall3D &, const MaxBall3D &);
-        friend constexpr bool operator<(const MaxBall3D &, const MaxBall3D &);       
+        friend constexpr bool operator<(const MaxBall3D &, const MaxBall3D &); 
+        friend std::ofstream& operator<<(std::ofstream &, const MaxBall3D &);      
 };
 
 # endif 

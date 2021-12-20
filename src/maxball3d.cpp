@@ -36,3 +36,11 @@ constexpr bool operator>=(const MaxBall3D & ball1, const MaxBall3D & ball2) {
 constexpr bool operator<(const MaxBall3D & ball1, const MaxBall3D & ball2) {
     return (ball1.radius_ < ball2.radius_);
 }
+
+std::ofstream& operator<<(std::ofstream & out_stream, const MaxBall3D & ball) {
+
+    out_stream<<std::get<0>(ball.coordinate_)<<","<<std::get<1>(ball.coordinate_)<<","
+        <<std::get<2>(ball.coordinate_)<<","<<ball.radius_<<","<<ball.rank_;
+    return out_stream;
+
+}

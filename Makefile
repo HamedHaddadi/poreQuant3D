@@ -1,21 +1,22 @@
 CC = clang++
-TARGET_FILE = poreq 
-CFLAGS = -std=c++11 -Wall -g 
+EXECUTABLE = poreq 
+CFLAGS = -std=c++1z -Wall -g -O3 
 SOURCES=$(wildcard ./src/*.cpp)
 BUILD_DIR=./build
+UNAME := $(shell uname)
 
-all: $(SOURCES)
-	echo "the source files are ..."
+all: $(SOURCES) | $(BUILD_DIR) 
 	echo $(SOURCES)
-	$(CC) $(CFLAGS) $^ -o $(BUILD_DIR)/$(TARGET_FILE)
+	$(CC) $(CFLAGS) $^ -o $(BUILD_DIR)/$(EXECUTABLE)
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
 clean:
-	$(RM) $(BUILD_DIR)/$(TARGET_FILE)
+	$(RM) $(BUILD_DIR)/$(EXECUTABLE)
 
 .PHONY: setup
+
 setup:
-	mkdir outputs
 	make clean
 	make all 
-
-

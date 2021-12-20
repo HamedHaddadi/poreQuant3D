@@ -17,3 +17,12 @@ Pore& Pore::operator=(Pore && other) noexcept {
     std::swap(pore_family_, other.pore_family_);
     return *this;
 }
+
+std::ofstream& operator<<(std::ofstream & out_stream, const Pore & pore) {
+    out_stream<<pore.id_<<","<<std::get<0>(pore.coordinates_)<<","
+        <<std::get<1>(pore.coordinates_)<<","<<pore.radius_;
+    
+    return out_stream;
+
+}
+

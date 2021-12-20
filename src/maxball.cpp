@@ -26,7 +26,7 @@ MaxBall& MaxBall::operator=(MaxBall&& other) noexcept {
 
 bool MaxBall::fullyIncludedIn(const MaxBall & other) const {
     return (::sqrt(::pow(std::get<0>(coordinate_) - std::get<0>(other.coordinate_), 2.0) +
-         ::pow(std::get<1>(coordinate_) - std::get<1>(other.coordinate_), 2.0)) <= other.radius_);
+         ::pow(std::get<1>(coordinate_) - std::get<1>(other.coordinate_), 2.0)) <= other.radius_ - radius_);
 }
 
 bool MaxBall::overlapsWith(const MaxBall & other) const {
@@ -65,4 +65,13 @@ constexpr bool operator>=(const MaxBall & ball1, const MaxBall & ball2) {
 
 constexpr bool operator<(const MaxBall & ball1, const MaxBall & ball2) {
     return (ball1.radius_ < ball2.radius_);
+}
+
+std::ofstream& operator<<(std::ofstream & out_stream, const MaxBall & ball){
+
+    out_stream<<std::get<0>(ball.coordinate_)<<","
+            <<std::get<1>(ball.coordinate_)<<","
+                <<ball.radius_<<","<<ball.rank_;
+
+    return out_stream;
 }
