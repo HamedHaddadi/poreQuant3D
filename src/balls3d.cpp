@@ -1,19 +1,19 @@
 
-# include "balls3d.h"
+# include "../include/balls3d.h"
 
-void Balls3D::generateBalls(Domain3D & domain) {
+void Balls3D::generateBalls(std::unique_ptr<Domain3D> domain, double threshold) {
 
     int row, col, dep, node_type{0}, counter{0};
     double dx, dy, dz;
     bool loop_flag = true;
-    row = domain.grid_.size();
-    col = domain.grid_[0].size();
-    dep = domain.grid_[0][0].size();
-    dx = domain.dx_;
-    dy = domain.dy_;
-    dz = domain.dz_;
-    output_dir_ = domain.output_dir_;
-    counter_ = domain.counter_;
+    row = domain -> grid_.size();
+    col = domain -> grid_[0].size();
+    dep = domain -> grid_[0][0].size();
+    dx = domain -> dx_;
+    dy = domain -> dy_;
+    dz = domain -> dz_;
+    output_dir_ = domain -> output_dir_;
+    counter_ = domain -> counter_;
 
     int range_max = ((row > col) ? row:col);
     range_max = ((range_max > dep) ? range_max:dep);
@@ -22,17 +22,18 @@ void Balls3D::generateBalls(Domain3D & domain) {
         for (int cy = 0; cy < col; cy++) {
             for (int cz = 0; cz < dep; cz++) {
                 loop_flag = true; 
-                if ((domain.nodeType(cx, cy, cz) == 0) || (domain.nodeType(cx, cy, cz) == 1)) continue;
+                if ((domain -> nodeType(cx, cy, cz) == 0) || (domain -> nodeType(cx, cy, cz) == 1)
+                             || (domain -> nodeType(cx, cy, cz) == -1) || (domain -> nodeType(cx, cy, cz) == -2)) continue;
                 for (int radius = 1; radius < range_max && loop_flag; radius++) {
                     for (int x = utilities::minRes(cx - radius, 0); x <= utilities::maxRes(cx + radius, row) &&loop_flag; x++)
                         for (int y = utilities::minRes(cy - radius, 0); y <= utilities::maxRes(cy + radius, row) &&loop_flag; y++)
                             for (int z = utilities::minRes(cz - radius, 0); z <= utilities::maxRes(cz + radius, dep) && loop_flag; z++) {
-                                if (utilities::Radius3D<int>(x - cx, y - cy, z - cz) <= radius) {
-                                    node_type = domain.nodeType(x, y, z);
-                                    if ((node_type == 0) || (node_type == 1)) {
+                                if (utilities::Radius(x - cx, y - cy, z - cz) <= radius) {
+                                    node_type = domain -> nodeType(x, y, z);
+                                    if (((node_type == 0) || (node_type == 1)) && (radius > 1)) {
                                         loop_flag = false;
                                         max_balls_.emplace_back(std::make_tuple((double)cx*dx, (double)cy*dy, (double)cz*dz), 
-                                                        counter, utilities::Radius3D<double>((double)(x - cx)*dx, (double)(y - cy)*dy, (double)(z - cz)*dz));
+                                                        counter, utilities::Radius((double)(x - cx)*dx, (double)(y - cy)*dy, (double)(z - cz)*dz), threshold);
                                         ++counter;
                                     }
                                 }
@@ -98,7 +99,6 @@ void Balls3D::ballsToCSV() {
     }
 }
 
-
 void Balls3D::poresToCSV() {
 
     std::string pore_filename = output_dir_ + "/pores_" + std::to_string(counter_) + ".csv";
@@ -123,9 +123,9 @@ void Balls3D::poresToCSV() {
     }
 }
 
-void Balls3D::operator()(Domain3D & domain) {
+void Balls3D::operator()(std::unique_ptr<Domain3D> domain, double threshold) {
     
-    generateBalls(domain);
+    generateBalls(std::move(domain), threshold);
     ballsToCSV();
     sortBallsRadius();
     generateBallGroups();

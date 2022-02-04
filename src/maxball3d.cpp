@@ -1,5 +1,5 @@
 
-# include "maxball3d.h"
+# include "../include/maxball3d.h"
 
 bool MaxBall3D::fullyIncludedIn(const MaxBall3D & other) const {
     return (::sqrt(::pow(std::get<0>(coordinate_) - std::get<0>(other.coordinate_), 2.0) +
@@ -8,15 +8,21 @@ bool MaxBall3D::fullyIncludedIn(const MaxBall3D & other) const {
 }
 
 bool MaxBall3D::overlapsWith(const MaxBall3D & other) const {
+
+    bool overlap_cond, threshold_cond;
     double radiusDiff = ::sqrt(::pow(std::get<0>(coordinate_) - std::get<0>(other.coordinate_), 2.0) + 
-    ::pow(std::get<1>(coordinate_) - std::get<1>(other.coordinate_), 2.0) +
-     ::pow(std::get<2>(coordinate_) - std::get<2>(other.coordinate_), 2.0));
-    return ((radiusDiff <= (radius_ + other.radius_)) && (radiusDiff > std::abs(radius_ - other.radius_)));
+        ::pow(std::get<1>(coordinate_) - std::get<1>(other.coordinate_), 2.0) +
+            ::pow(std::get<2>(coordinate_) - std::get<2>(other.coordinate_), 2.0));
+    overlap_cond = (radiusDiff <= (radius_ + other.radius_)) && (radiusDiff > std::abs(radius_ - other.radius_));
+    threshold_cond = true;
+    if ((threshold_ != 0.0) && (radiusDiff > radius_) && (other.radius_ >= threshold_*radius_))   
+        threshold_cond = false; 
+    return (overlap_cond && threshold_cond);        
 }
 
 void MaxBall3D::addToParents(const MaxBall3D & larger) {
     if (larger.rank_ == 0)
-        parents_.insert(larger.rank_);
+        parents_.insert(larger.id_);
     else
         parents_.insert(larger.parents_.begin(), larger.parents_.end());    
 }

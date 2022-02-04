@@ -1,17 +1,14 @@
-# include "utilities.h"
+# include "../include/utilities.h"
 
 void utilities::makedir(std::string dirname) {
     std::string command = "mkdir " + dirname;
     int status = std::system(command.c_str());
-    if (status == 0)
-        std::cout <<"directory creation successful "<<std::endl;
-    else
-        std::cout <<"could not create directory"<<std::endl;
+    if (status != 0)
+        std::cout <<"could not create directory ..."<< dirname<< std::endl;
 }
 
 
 void utilities::listdir(std::vector<std::string> & file_list, std::string dir_name) {
-
     glob_t results;
     glob(dir_name.c_str(), GLOB_TILDE, NULL, &results);
     for (unsigned int i = 0; i < results.gl_pathc; ++i) {

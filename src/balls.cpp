@@ -1,34 +1,37 @@
 
-# include "balls.h"
+# include "../include/balls.h"
 
-void Balls::generateBalls(Domain2D & domain) {
+void Balls::generateBalls(std::unique_ptr<Domain2D> domain, double threshold) {
 
-    int row, col, node_type{0}, counter{0};
+    int row, col, this_node{0}, counter{0};
     double dx, dy;
     bool loop_flag = true;
-    row = domain.grid_.size();
-    col = domain.grid_[0].size();
-    dx = domain.dx_;
-    dy = domain.dy_;
-    output_dir_ = domain.output_dir_;
-    counter_ = domain.counter_;
+    row = domain -> grid_.size();
+    col = domain -> grid_[0].size();
+    dx = domain -> dx_;
+    dy = domain -> dy_;
+    output_dir_ = domain -> output_dir_;
+    counter_ = domain -> counter_;
     int range_max = (row >= col) ? row: col;
 
     for (int cx = 0; cx < row; cx++)
         for (int cy = 0; cy < col; cy++)
         {
             loop_flag = true;
-            if ((domain.nodeType(cx, cy) == 0) || (domain.nodeType(cx, cy) == 1)) continue;
+            if ((domain -> nodeType(cx, cy) == 0) ||
+                    (domain -> nodeType(cx, cy) == 1) ||
+                        (domain -> nodeType(cx, cy) == -1) ||
+                             (domain -> nodeType(cx, cy) == -2)) continue;
             for (int radius = 1; radius < range_max && loop_flag; radius++) {
                 for (int x = utilities::minRes(cx - radius, 0); x <= utilities::maxRes(cx + radius, row) &&loop_flag; x++)
                     for (int y = utilities::minRes(cy - radius, 0); y <= utilities::maxRes(cy + radius, col) &&loop_flag; y++)
-                    if (utilities::Radius<int>(x - cx, y -cy) <= radius) {
-                        node_type = domain.nodeType(x, y);
-                        if ((node_type == 0) || (node_type == 1))
+                    if (utilities::Radius(x - cx, y -cy) <= radius) {
+                        this_node = domain -> nodeType(x, y);
+                        if (((this_node == 0) || (this_node == 1)) && radius > 1)
                         {
                             loop_flag = false;
                             max_balls_.emplace_back(std::make_tuple((double)cx*dx, (double)cy*dy), counter,\
-                            utilities::Radius<double>((double)(x - cx)*dx, (double)(y -cy)*dy));
+                            utilities::Radius((double)(x - cx)*dx, (double)(y -cy)*dy), threshold);
                             ++counter;
                         }
                     }
@@ -50,11 +53,12 @@ void Balls::resetBallsIndex() {
 }
 
 void Balls::generateBallGroups() {
-
     for (int i = 0; i < max_size_ - 1; i++)
         for (int j = i + 1; j < max_size_; j++) {
-            if (max_balls_.at(j).fullyIncludedIn(max_balls_.at(i)))
+            if (max_balls_.at(j).fullyIncludedIn(max_balls_.at(i))) {
                 max_balls_.at(j).makeIncluded();
+                max_balls_.at(j).raiseRank();
+            }
             else if (max_balls_.at(i).overlapsWith(max_balls_.at(j))) {
                 max_balls_.at(j).raiseRank();
                 max_balls_.at(j).addToParents(max_balls_.at(i));
@@ -163,7 +167,6 @@ void Balls::ballsToCSV() {
     for (auto const & ball:max_balls_) {
         balls_out<<ball<<std::endl;
     }
-
 }
 
 void Balls::poresToCSV() {
@@ -207,15 +210,15 @@ void Balls::adjacencyToTXT() {
     }
 }
 
-void Balls::operator()(Domain2D & domain) {
-    generateBalls(domain);
-    ballsToCSV();
+void Balls::operator()(std::unique_ptr<Domain2D> domain, double threshold) {
+    generateBalls(std::move(domain), threshold);
     sortBallsRadius();
     generateBallGroups();
     populateSiblings();
     generatePores();
     generatePoreConnections();
     generatePoreAdjacency();
+    ballsToCSV();
     poresToCSV();
     adjacencyToTXT();
 }

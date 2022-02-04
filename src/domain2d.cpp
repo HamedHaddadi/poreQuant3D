@@ -1,5 +1,5 @@
 
-# include "domain2d.h"
+# include "../include/domain2d.h"
 
 const int Domain2D::ix_[8] = {1,1,0,-1,-1,-1,0,1};
 const int Domain2D::iy_[8] = {0,1,1,1,0,-1,-1,-1};
@@ -76,8 +76,11 @@ int Domain2D::nodeType(int x, int y) {
         return 2;
     else if ((!solid) && (num_solid == 0))
         return 3;
-    else
+    else if ((solid) && (num_solid == 0)) 
         return -1;
+    else 
+        return -2;
+    
 }
 
 void Domain2D::gridToCSV(std::string flag) {
@@ -96,6 +99,7 @@ void Domain2D::gridToCSV(std::string flag) {
         }
     }
 }
+
 
 /* non static helpers */
 bool Domain2D::inDomain(int x, int y) {return ((x >= 0) && (x < res_x_) && (y >= 0)&& (y < res_y_));}

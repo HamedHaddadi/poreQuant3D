@@ -1,5 +1,5 @@
 
-# include "domain3d.h"
+# include "../include/domain3d.h"
 
 // using a Q19 lattice type
 const int Domain3D::ix_[] = {1,-1,0,0,0,0,1,-1,1,-1,0,0,1,-1,1,-1,0,0};
@@ -84,8 +84,10 @@ int Domain3D::nodeType(int x, int y, int z) {
         return 2;
     else if ((!solid) && (num_solid == 0))
         return 3;
-    else
+    else if ((solid) && (num_solid == 0))
         return -1;
+    else
+        return -2;
 }
 
 void Domain3D::gridToCSV(std::string flag) {

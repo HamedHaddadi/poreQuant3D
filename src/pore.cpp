@@ -1,5 +1,5 @@
 
-# include "pore.h"
+# include "../include/pore.h"
 
 Pore::Pore(Pore && other) noexcept {
     std::swap(id_, other.id_);
