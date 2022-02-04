@@ -1,6 +1,6 @@
 # poreQuant3D
 C++ pore network analysis 
-# this project has started by financial support from professor Dino Di Carlo in UCLA. 
+this project has started by financial support from professor Dino Di Carlo in UCLA. 
 The goal was to develop a tool for analysis of porous tissue generation scaffolds. 
 For background of microfluidic-based microgel production:
   Griffin and Weaver "Accelerated wound healing by injectable microporous gel scaffolds assembled from annealed building blocks", Nature Materials 14, 737
