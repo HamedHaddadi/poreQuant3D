@@ -137,9 +137,9 @@ void Balls::generatePoreConnections() {
     }
 }
 
-void Balls::generatePoreAdjacency() {
+void Balls::generateAdjacencyMatrix() {
     int pore_size = pores_.size();
-    pore_adjacency_.resize(pore_size, std::vector<int>(pore_size, 0));
+    adjacency_matrix_.resize(pore_size, std::vector<int>(pore_size, 0));
 
     std::set<int> connections;
     std::set<int>::iterator con_it;
@@ -147,13 +147,20 @@ void Balls::generatePoreAdjacency() {
     for (pores_it_ = pores_.begin(); pores_it_ != pores_.end(); pores_it_++) {
         connections = pores_it_ -> getConnections();
         pore_id = pores_it_ -> getID();
-        pore_adjacency_[pore_id][pore_id] = 1;
+        adjacency_matrix_.at(pore_id).at(pore_id) = 1;
         for (con_it = connections.begin(); con_it != connections.end(); con_it++) {
-            pore_adjacency_[pore_id][*con_it] = 1;
-            pore_adjacency_[*con_it][pore_id] = 1;
+            adjacency_matrix_.at(pore_id).at(*con_it) = 1;
+            adjacency_matrix_.at(*con_it).at(pore_id) = 1;
         }
     }
 }
+
+void Balls::generateAdjacencyList() {
+    for (pores_it_ = pores_.begin(); pores_it_ != pores_.end(); pores_it_++) {
+        adjacency_list_.insertNode(pores_it_ -> getID(), pores_it_ -> getConnections());
+    }
+}
+
 
 /* output methods */
 void Balls::ballsToCSV() {
@@ -193,7 +200,7 @@ void Balls::poresToCSV() {
     }
 }
 
-void Balls::adjacencyToTXT() {
+void Balls::adjacencyMatrixToTXT() {
     std::string out_filename = output_dir_ + "/connections_" + std::to_string(counter_) + ".txt";
     std::ofstream adjacency_out(out_filename.c_str());
     if (!adjacency_out.is_open())
@@ -201,11 +208,11 @@ void Balls::adjacencyToTXT() {
     
     std::vector< std::vector<int> >::iterator row;
     std::vector<int>::iterator col;
-    for (row = pore_adjacency_.begin(); row != pore_adjacency_.end(); row++) {
+    for (row = adjacency_matrix_.begin(); row != adjacency_matrix_.end(); row++) {
         for (col = row -> begin(); col != row -> end(); col++) {
-            adjacency_out<<*col<<" ";
+            std::cout<<*col<<" ";
             if (col == std::prev(row -> end()))
-                adjacency_out<<std::endl;
+                std::cout<<std::endl;
         }
     }
 }
@@ -217,8 +224,8 @@ void Balls::operator()(std::unique_ptr<Domain2D> domain, double threshold) {
     populateSiblings();
     generatePores();
     generatePoreConnections();
-    generatePoreAdjacency();
+    generateAdjacencyMatrix();
     ballsToCSV();
     poresToCSV();
-    adjacencyToTXT();
+    adjacencyMatrixToTXT();
 }

@@ -1,10 +1,10 @@
 # ifndef BALLS_H_
 # define BALLS_H_
 
-# include "header.h"
-# include "maxball.h"
-# include "domain2d.h"
-# include "pore.h"
+# include "../include/header.h"
+# include "../include/maxball.h"
+# include "../include/domain2d.h"
+# include "../include/pore.h"
 
 class Domain2D;
 
@@ -17,7 +17,8 @@ class Balls {
     
     protected:
         std::unordered_map<int, int> ball_pore_index_map_;
-        std::vector< std::vector<int> > pore_adjacency_;
+        std::vector< std::vector<int> > adjacency_matrix_;
+        types::AdjList adjacency_list_;
         std::string output_dir_;
         int counter_;
         int max_size_;
@@ -31,9 +32,10 @@ class Balls {
         void generateBallGroups();
         void populateChildren(int, int);
         void populateSiblings();
-        void generatePoreAdjacency();
+        void generateAdjacencyMatrix();
+        void generateAdjacencyList();
         void generatePoreConnections();
-        void adjacencyToTXT();
+        void adjacencyMatrixToTXT();
         void operator()(std::unique_ptr<Domain2D>, double);
         virtual void ballsToCSV();
         virtual void poresToCSV();

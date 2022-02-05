@@ -1,8 +1,8 @@
 # ifndef DOMAIN3D_H_
 # define DOMAIN3D_H_
 
-# include "./header.h"
-# include "./balls3d.h"
+# include "../include/header.h"
+# include "../include/balls3d.h"
 
 class Domain3D {
 

@@ -1,8 +1,8 @@
 /* Domain2D class for pixel operations */
 # ifndef Domain2D_H_
 # define Domain2D_H_
-# include "./header.h"
-# include "./balls.h"
+# include "../include/header.h"
+# include "../include/balls.h"
 
 class Domain2D {
     private:

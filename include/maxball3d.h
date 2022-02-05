@@ -1,8 +1,9 @@
 # ifndef MAXBALL3D_H_
 # define MAXBALL3D_H_
 
-# include "header.h"
-# include "maxball.h"
+# include "../include/header.h"
+# include "../include/maxball.h"
+
 
 class MaxBall3D: public MaxBall {
 

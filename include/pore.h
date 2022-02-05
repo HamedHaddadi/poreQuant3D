@@ -1,6 +1,6 @@
 # ifndef PORE_H_
 # define PORE_H_
-# include "header.h"
+# include "../include/header.h"
 
 class Pore {
 

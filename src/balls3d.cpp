@@ -132,9 +132,9 @@ void Balls3D::operator()(std::unique_ptr<Domain3D> domain, double threshold) {
     populateSiblings();
     generatePores();
     generatePoreConnections();
-    generatePoreAdjacency();
+    generateAdjacencyMatrix();
     poresToCSV();
-    adjacencyToTXT();
+    adjacencyMatrixToTXT();
 }
 
 

@@ -1,11 +1,11 @@
 # ifndef BALLS3D_H_
 # define BALLS3D_H_
 
-# include "header.h"
-# include "domain3d.h"
-# include "balls.h"
-# include "maxball3d.h"
-# include "pore3d.h"
+# include "../include/header.h"
+# include "../include/domain3d.h"
+# include "../include/balls.h"
+# include "../include/maxball3d.h"
+# include "../include/pore3d.h"
 
 class Domain3D;
 

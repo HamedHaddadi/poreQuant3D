@@ -1,6 +1,6 @@
 # if !defined(MAXBALL_H)
 # define MAXBALL_H
-# include "header.h"
+# include "../include/header.h"
 
 class MaxBall {
 

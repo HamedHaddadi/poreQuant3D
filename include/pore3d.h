@@ -1,8 +1,8 @@
 # ifndef PORE3D_H_
 # define PORE3D_H_
 
-# include "header.h"
-# include "pore.h"
+# include "../include/header.h"
+# include "../include/pore.h"
 
 class Pore3D: public Pore {
 
