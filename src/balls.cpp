@@ -1,4 +1,3 @@
-
 # include "../include/balls.h"
 
 void Balls::generateBalls(std::unique_ptr<Domain2D> domain, double threshold) {
@@ -206,16 +205,24 @@ void Balls::adjacencyMatrixToTXT() {
     if (!adjacency_out.is_open())
         std::cout <<"could not open adjacency output file" <<std::endl;
     
-    std::vector< std::vector<int> >::iterator row;
-    std::vector<int>::iterator col;
-    for (row = adjacency_matrix_.begin(); row != adjacency_matrix_.end(); row++) {
-        for (col = row -> begin(); col != row -> end(); col++) {
-            std::cout<<*col<<" ";
+    for (std::vector< std::vector<int> >::iterator row = adjacency_matrix_.begin(); row != adjacency_matrix_.end(); row++) {
+        for (std::vector<int>::iterator col = row -> begin(); col != row -> end(); col++) {
+            adjacency_out<<*col<<" ";
             if (col == std::prev(row -> end()))
-                std::cout<<std::endl;
+                adjacency_out<<std::endl;
         }
     }
 }
+
+void Balls::adjacencyListToTXT() {
+    std::string out_filename = output_dir_ + "/adjacency_list_" + std::to_string(counter_) + ".dat";
+    std::ofstream list_out(out_filename.c_str());
+    if (!list_out.is_open())
+        std::cout <<"could not open adjacency output file" <<std::endl; 
+    list_out << adjacency_list_;   
+
+}
+
 
 void Balls::operator()(std::unique_ptr<Domain2D> domain, double threshold) {
     generateBalls(std::move(domain), threshold);
@@ -225,7 +232,9 @@ void Balls::operator()(std::unique_ptr<Domain2D> domain, double threshold) {
     generatePores();
     generatePoreConnections();
     generateAdjacencyMatrix();
+    generateAdjacencyList();
     ballsToCSV();
     poresToCSV();
     adjacencyMatrixToTXT();
+    adjacencyListToTXT();
 }

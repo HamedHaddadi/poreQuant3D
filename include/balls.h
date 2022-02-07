@@ -36,6 +36,7 @@ class Balls {
         void generateAdjacencyList();
         void generatePoreConnections();
         void adjacencyMatrixToTXT();
+        void adjacencyListToTXT();
         void operator()(std::unique_ptr<Domain2D>, double);
         virtual void ballsToCSV();
         virtual void poresToCSV();
