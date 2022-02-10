@@ -19,7 +19,7 @@
 # include <cmath>
 # include <memory>
 # include "utilities.h"
-# include "types.h"
+# include "containers.h"
 
 // static types
 static std::map<std::string , int> node_type = {{"solid", 0}, {"solid-boundary", 1},

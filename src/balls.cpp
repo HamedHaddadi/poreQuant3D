@@ -93,7 +93,7 @@ void Balls::populateSiblings() {
 void Balls::generatePores() {
     int pore_count{0};
     std::set<int> connections;
-    std::vector<types::Tuple3D> pore_family;
+    std::vector<containers::Tuple3D<double> > pore_family;
     std::tuple<double, double> parent_coordinates, child_coordinates;
     double radius;
 

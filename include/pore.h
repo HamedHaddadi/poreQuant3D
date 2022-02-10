@@ -11,12 +11,12 @@ class Pore {
 
     private:
         std::tuple<double, double> coordinates_;
-        std::vector<types::Tuple3D> pore_family_;
+        std::vector< containers::Tuple3D<double> > pore_family_;
 
     public:
         Pore() = default;
         Pore(std::tuple<double, double> coordinates, int id, double radius, 
-        std::set<int> connections, std::vector<types::Tuple3D> pore_family):
+        std::set<int> connections, std::vector<containers::Tuple3D<double> > pore_family):
             id_{id},
                 radius_{radius},
                     connections_{std::move(connections)},
@@ -32,7 +32,7 @@ class Pore {
         std::tuple<double, double> getCoordinates() {return coordinates_;};
         double getRadius() const {return radius_;};
         std::set<int> getConnections() {return connections_;}
-        std::vector< types::Tuple3D > getPoreFamily() const {return pore_family_;};
+        std::vector< containers::Tuple3D<double> > getPoreFamily() const {return pore_family_;};
         void setConnections(std::set<int> new_connections) {connections_ = new_connections;}
         friend std::ofstream& operator<<(std::ofstream &, const Pore &);
 };

@@ -18,7 +18,7 @@ class Balls {
     protected:
         std::unordered_map<int, int> ball_pore_index_map_;
         std::vector< std::vector<int> > adjacency_matrix_;
-        types::AdjList adjacency_list_;
+        containers::AdjList adjacency_list_;
         std::string output_dir_;
         int counter_;
         int max_size_;
